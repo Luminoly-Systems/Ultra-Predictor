@@ -25,3 +25,5 @@ uvicorn app.main:app
 ### CI/CD Pipeline
 
 Deployment is automated via GitHub Actions. Any merge into main triggers a build of the Docker image and a release to the luminolycr registry.
+
+© 2026 Luminoly Labs. Confidential and Proprietary.
