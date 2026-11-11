@@ -1,0 +1,37 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: 'Az CLI: Login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Az CLI: Build and Push Image'
+        run: |
+          az acr build \
+            --registry luminolycr \
+            --image ultra-predictor:${{ github.sha }} \
+            --image ultra-predictor:latest .
+
+      - name: 'Az CLI: Update Container App'
+        run: |
+          az containerapp update --name ultra-predictor \
+            --resource-group lab-Luminoly \
+            --image luminolycr.azurecr.io/ultra-predictor:${{ github.sha }}
