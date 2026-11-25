@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+azure.storage.blob
+azure.identity
+azure.keyvault.secrets
